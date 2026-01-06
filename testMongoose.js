@@ -1,65 +1,73 @@
+// testMongoose.js - упрощенная версия
 const mongoose = require('mongoose');
 
 // Подключаемся к базе данных
 mongoose.connect('mongodb://127.0.0.1:27017/musicMongoose2024');
 
-// Создаем схему
-const musicianSchema = new mongoose.Schema({ 
-    name: String,
-    genre: String,
-    activeYears: String,
-    country: { type: String, default: 'USA' }
-});
+// Импортируем модель
+const Musician = require('./models/musician');
 
-// Добавляем метод схемы (как в задании)
-musicianSchema.methods.perform = function() {
-    console.log(`${this.name} исполняет ${this.genre}`);
-};
-
-// Добавляем еще один метод
-musicianSchema.methods.getInfo = function() {
-    return `${this.name} - ${this.genre} (${this.activeYears})`;
-};
-
-// Создаем модель
-const Musician = mongoose.model('Musician', musicianSchema);
-
-// Создаем и сохраняем музыканта
-async function saveMusician() {
+// Простой тест
+async function simpleTest() {
+    console.log('🎵 Простой тест модели Musician\n');
+    
     try {
-        const lilpeep = new Musician({ 
-            name: 'Lil Peep',
-            genre: 'Emo Rap, Cloud Rap',
+        // 1. Очищаем коллекцию
+        await Musician.deleteMany({});
+        console.log('✅ Коллекция очищена');
+        
+        // 2. Создаем первого музыканта
+        const lilpeep = new Musician({
+            title: 'Lil Peep',
+            nick: 'lilpeep',
+            avatar: '/images/lilpeep-1.jpg',
+            desc: 'Американский рэп-певец, символ эмоциональной уязвимости.',
+            genre: ['Emo Rap', 'Cloud Rap'],
             activeYears: '2015-2017',
             country: 'USA'
         });
         
-        // Сохраняем
         await lilpeep.save();
-        console.log('✅ Музыкант сохранен');
+        console.log('✅ Lil Peep сохранен');
+        console.log('   ID:', lilpeep._id);
+        console.log('   Инфо:', lilpeep.getInfo());
         
-        // Используем методы схемы
-        lilpeep.perform(); // Вызов метода
-        console.log(lilpeep.getInfo()); // Вызов другого метода
-        
-        // Создаем еще одного музыканта
-        const darkPrince = new Musician({
-            name: 'Тёмный принц',
-            genre: 'Cloud Rap, Underground',
-            activeYears: '2020-настоящее время',
-            country: 'Russia'
+        // 3. Создаем второго музыканта
+        const musician2 = new Musician({
+            title: '2hollis',
+            nick: '2hollis',
+            desc: 'Американский мультиинструменталист.',
+            genre: ['Hyperpop'],
+            activeYears: '2019-настоящее время'
         });
         
-        await darkPrince.save();
-        console.log('✅ Второй музыкант сохранен');
-        darkPrince.perform();
-        console.log(darkPrince.getInfo());
+        await musician2.save();
+        console.log('\n✅ 2hollis сохранен');
+        
+        // 4. Проверяем количество
+        const count = await Musician.countDocuments();
+        console.log(`\n📊 Всего музыкантов: ${count}`);
+        
+        // 5. Находим всех
+        const all = await Musician.find({});
+        console.log('\n🎵 Все музыканты:');
+        all.forEach(m => console.log(`   - ${m.title} (@${m.nick})`));
         
     } catch (error) {
-        console.error('❌ Ошибка:', error.message);
+        console.error('\n❌ Ошибка:', error.message);
+        console.error('Детали:', error);
+        
+        // Проверяем тип ошибки
+        if (error.name === 'ValidationError') {
+            console.log('\n🔍 Ошибки валидации:');
+            for (const field in error.errors) {
+                console.log(`   ${field}: ${error.errors[field].message}`);
+            }
+        }
     } finally {
-        mongoose.disconnect();
+        await mongoose.disconnect();
+        console.log('\n🔌 Соединение закрыто');
     }
 }
 
-saveMusician();
+simpleTest();
