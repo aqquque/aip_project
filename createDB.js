@@ -2,15 +2,12 @@ const { MongoClient } = require('mongodb');
 // Подключаем модуль data.js
 var data = require("./data.js").data;
 
-// Выводим данные в консоль (как в задании)
-console.log(data);
-
 // Connection URL
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 
-// Database Name
-const dbName = 'test2024';
+// Database Name - изменяем на tc2024
+const dbName = 'tc2024';
 
 async function main() {
     try {
@@ -19,10 +16,10 @@ async function main() {
         console.log('Connected successfully to server');
         
         const db = client.db(dbName);
-        const collection = db.collection('musicians'); // или documents
+        // Изменяем название коллекции на musicians
+        const collection = db.collection('musicians');
 
         // Вставляем данные из data.js
-        console.log('Вставляем данные...');
         const insertResult = await collection.insertMany(data);
         console.log('Inserted documents =>', insertResult);
 
