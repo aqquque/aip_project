@@ -1,35 +1,40 @@
 const { MongoClient } = require('mongodb');
-// or as an es module:
-// import { MongoClient } from 'mongodb'
+// Подключаем модуль data.js
+var data = require("./data.js").data;
 
+// Выводим данные в консоль (как в задании)
+console.log(data);
 
 // Connection URL
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 
-
 // Database Name
 const dbName = 'test2024';
 
-
 async function main() {
- // Use connect method to connect to the server
- await client.connect();
- console.log('Connected successfully to server');
- const db = client.db(dbName);
- const collection = db.collection('documents');
+    try {
+        // Подключаемся к серверу
+        await client.connect();
+        console.log('Connected successfully to server');
+        
+        const db = client.db(dbName);
+        const collection = db.collection('musicians'); // или documents
 
+        // Вставляем данные из data.js
+        console.log('Вставляем данные...');
+        const insertResult = await collection.insertMany(data);
+        console.log('Inserted documents =>', insertResult);
 
- // the following code examples can be pasted here...
- const insertResult = await collection.insertMany([{ a: 1 }, { a: 2 }, { a: 3 }]);
- console.log('Inserted documents =>', insertResult);
-
-
- return 'done.';
+        return 'done.';
+    } catch (error) {
+        console.error('Error:', error);
+        return 'error';
+    } finally {
+        await client.close();
+    }
 }
 
-
 main()
- .then(console.log)
- .catch(console.error)
- .finally(() => client.close());
+    .then(console.log)
+    .catch(console.error);
