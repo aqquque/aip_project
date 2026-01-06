@@ -4,6 +4,18 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
+var mongoose = require('mongoose');
+
+// Подключаемся к базе данных musicDB
+mongoose.connect('mongodb://localhost/musicDB')
+  .then(() => console.log(' MongoDB подключена успешно'))
+  .catch(err => {
+    console.error(' Ошибка подключения к MongoDB:', err.message);
+    console.log('Убедитесь, что MongoDB сервер запущен: mongod --dbpath=data/db');
+  });
+// =============================================
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -36,9 +48,9 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  //res.render('error');
- res.render('error',{title: 'Musicians'});
-
+  res.render('error', { title: 'Musicians' });
 });
+
+module.exports = app;
 
 module.exports = app;
