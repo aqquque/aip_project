@@ -4,20 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-
+// Подключение к MongoDB
 var mongoose = require('mongoose');
-
-// Подключаемся к базе данных musicDB
 mongoose.connect('mongodb://localhost/musicDB')
   .then(() => console.log(' MongoDB подключена успешно'))
   .catch(err => {
     console.error(' Ошибка подключения к MongoDB:', err.message);
-    console.log('Убедитесь, что MongoDB сервер запущен: mongod --dbpath=data/db');
+    console.log(' Убедитесь, что MongoDB сервер запущен: mongod --dbpath=data/db');
   });
-// =============================================
 
+// Импорт роутеров
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var musiciansRouter = require('./routes/musicians'); // ← ДОБАВЛЯЕМ
 
 var app = express();
 
@@ -32,8 +31,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Использование роутеров
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/musicians', musiciansRouter); // ← ДОБАВЛЯЕМ
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -50,7 +51,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', { title: 'Musicians' });
 });
-
-module.exports = app;
 
 module.exports = app;
