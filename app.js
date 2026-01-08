@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ====== НАСТРОЙКА СЕССИИ ======
+//  НАСТРОЙКА СЕССИИ 
 app.use(session({
   secret: "MusicProject",
   cookie: { maxAge: 60 * 1000 },
@@ -50,7 +50,12 @@ app.use(session({
     ttl: 60 // время жизни в секундах
   })
 }));
-// ==============================
+
+app.use(function(req, res, next) {
+  // Увеличиваем счетчик на 1 или устанавливаем в 1 если еще нет
+  req.session.counter = req.session.counter + 1 || 1;
+  next();
+});
 
 // Использование роутеров
 app.use('/', indexRouter);
