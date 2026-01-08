@@ -13,10 +13,14 @@ mongoose.connect('mongodb://localhost/musicDB')
     console.log(' Убедитесь, что MongoDB сервер запущен: mongod --dbpath=data/db');
   });
 
+//ДОБАВЛЯЕМ EXPRESS-SESSION
+var session = require("express-session");
+
+
 // Импорт роутеров
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var musiciansRouter = require('./routes/musicians'); // ← ДОБАВЛЯЕМ
+var musiciansRouter = require('./routes/musicians');
 
 var app = express();
 
@@ -31,10 +35,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Использование роутеров
+
+app.use(session({
+  secret: "MusicProject",  // Секретный ключ для подписи cookie
+  cookie: { maxAge: 60 * 1000 },  // Время жизни cookie: 1 минута (60 * 1000 мс)
+  proxy: true,
+  resave: true,
+  saveUninitialized: true
+}));
+
+
+// Использование роутеров (после настройки сессии)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/musicians', musiciansRouter); // ← ДОБАВЛЯЕМ
+app.use('/musicians', musiciansRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
