@@ -16,15 +16,9 @@ mongoose.connect('mongodb://localhost/musicDB')
 // Подключение express-session
 var session = require("express-session");
 
-// ====== ПОДКЛЮЧЕНИЕ CONNECT-MONGO 6.0.0 ======
-// Пробуй разные варианты (один из них должен сработать):
-// Вариант A:
-// const MongoStore = require('connect-mongo').default;
-// Вариант B:
+//ПОДКЛЮЧЕНИЕ CONNECT-MONGO 
 const { MongoStore } = require('connect-mongo');
-// Вариант C:
-// const MongoStore = require('connect-mongo').MongoStore;
-// =============================================
+
 
 // Импорт роутеров
 var indexRouter = require('./routes/index');
