@@ -1,6 +1,18 @@
 <% layout('./layout/page.ejs') %>
 
-<h1><%= title %></h1>
-<img src="<%= picture %>" alt=""/>
-<h4>Несколько слов о исполнителе: <%=desc%></h4>
-
+<!-- views/musician.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+    <h1><%= title %></h1>
+    <% if (picture) { %>
+        <img src="<%= picture %>" alt="<%= title %>">
+    <% } %>
+    <p><%= desc %></p>
+    <a href="/">На главную</a>
+</body>
+</html>
