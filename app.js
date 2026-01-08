@@ -13,9 +13,18 @@ mongoose.connect('mongodb://localhost/musicDB')
     console.log(' Убедитесь, что MongoDB сервер запущен: mongod --dbpath=data/db');
   });
 
-//ДОБАВЛЯЕМ EXPRESS-SESSION
+// Подключение express-session
 var session = require("express-session");
 
+// ====== ПОДКЛЮЧЕНИЕ CONNECT-MONGO 6.0.0 ======
+// Пробуй разные варианты (один из них должен сработать):
+// Вариант A:
+// const MongoStore = require('connect-mongo').default;
+// Вариант B:
+const { MongoStore } = require('connect-mongo');
+// Вариант C:
+// const MongoStore = require('connect-mongo').MongoStore;
+// =============================================
 
 // Импорт роутеров
 var indexRouter = require('./routes/index');
@@ -35,17 +44,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// ====== НАСТРОЙКА СЕССИИ ======
 app.use(session({
-  secret: "MusicProject",  // Секретный ключ для подписи cookie
-  cookie: { maxAge: 60 * 1000 },  // Время жизни cookie: 1 минута (60 * 1000 мс)
+  secret: "MusicProject",
+  cookie: { maxAge: 60 * 1000 },
   proxy: true,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: 'mongodb://localhost/musicDB',
+    ttl: 60 // время жизни в секундах
+  })
 }));
+// ==============================
 
-
-// Использование роутеров (после настройки сессии)
+// Использование роутеров
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/musicians', musiciansRouter);
