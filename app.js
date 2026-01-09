@@ -57,6 +57,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(require("./middlewares/createMenu.js"));
+app.use(require("./middlewares/createUser.js"));
 
 // Использование роутеров
 app.use('/', indexRouter);
