@@ -52,10 +52,11 @@ app.use(session({
 }));
 
 app.use(function(req, res, next) {
-  // Увеличиваем счетчик на 1 или устанавливаем в 1 если еще нет
   req.session.counter = req.session.counter + 1 || 1;
   next();
 });
+
+app.use(require("./middlewares/createMenu.js"));
 
 // Использование роутеров
 app.use('/', indexRouter);
