@@ -1,18 +1,24 @@
 <% layout('./layout/page.ejs') %>
 
-<!-- views/musician.ejs -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
-<body>
+<div class="container musician-container">
     <h1><%= title %></h1>
+    
     <% if (picture) { %>
-        <img src="<%= picture %>" alt="<%= title %>">
+        <div class="text-center mb-4">
+            <img src="<%= picture %>" alt="<%= title %>" class="musician-image">
+        </div>
     <% } %>
-    <p><%= desc %></p>
-    <a href="/">На главную</a>
-</body>
-</html>
+    
+    <div class="musician-desc">
+        <p><%= desc %></p>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary btn-lg">
+            <i class="bi bi-house-door"></i> На главную
+        </a>
+    </div>
+</div>
+
+<!-- Добавляем иконки Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">

@@ -1,14 +1,65 @@
 <% layout('./layout/page.ejs') %>
 
-<% if(user) { %>
-   <h1>Привет <%= user.username %></h1>
-<% } else { %>
-   <h1>Привет незалогиненный пользователь</h1>
-   <div class="alert alert-info mt-3">
-       <p>Для просмотра страниц музыкантов необходимо <a href="/logreg">войти в систему</a>.</p>
-   </div>
-<% } %>
+<div class="container">
+  <% if(user) { %>
+    <div class="welcome-card bg-white p-4 rounded shadow mb-4">
+      <h1 class="display-5 mb-3">
+        <i class="bi bi-emoji-smile text-primary me-2"></i>
+        Привет, <span class="text-gradient"><%= user.username %></span>!
+      </h1>
+      <p class="lead">Рады видеть вас снова на нашем музыкальном портале.</p>
+    </div>
+  <% } else { %>
+    <div class="welcome-card bg-white p-4 rounded shadow mb-4">
+      <h1 class="display-5 mb-3">
+        <i class="bi bi-emoji-wink text-primary me-2"></i>
+        Привет, незалогиненный пользователь!
+      </h1>
+      <div class="alert alert-info mt-3 border-0">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+          <div>
+            <p class="mb-1">Для просмотра страниц музыкантов необходимо войти в систему.</p>
+            <a href="/logreg" class="btn btn-outline-light btn-sm mt-2">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Войти или зарегистрироваться
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
 
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
-<p>Счетчик: <%= counter %></p>
+  <div class="content-section bg-white p-4 rounded shadow">
+    <h1 class="mb-4"><%= title %></h1>
+    <p class="lead">Добро пожаловать на портал музыкальных исполнителей.</p>
+    
+    <div class="counter-section mt-4">
+      <h3 class="h5 mb-3">
+        <i class="bi bi-graph-up text-success me-2"></i>
+        Статистика посещений:
+      </h3>
+      <div class="counter-display">
+        <i class="bi bi-eye me-2"></i>
+        Счетчик: <strong><%= counter %></strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.welcome-card {
+  border-left: 5px solid var(--primary-color);
+}
+
+.content-section {
+  border-top: 3px solid var(--accent-color);
+}
+</style>
